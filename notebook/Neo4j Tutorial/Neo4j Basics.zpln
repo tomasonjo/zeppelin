@@ -1,0 +1,675 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n# Neo4j\n\n[Neo4j](https://neo4j.com/) is a native graph database, built from the ground up to leverage not only data but also data relationships. Unlike traditional databases, which arrange data in rows, columns and tables, Neo4j has a flexible structure defined by stored relationships between data records. With Neo4j, each data record, or node, stores direct pointers to all the nodes it’s connected to. You can download it or spin up a sandbox instance [here](https://neo4j.com/try-neo4j/).\n\nThere are 2 things you need to do before using Neo4j in Zeppelin.\n\n* [Download and install Neo4j](https://neo4j.com/try-neo4j/)\n* Specify the url, username and password for neo4j interpreter to connect to your Neo4j instance\n\n\n## Network of thrones\n\nTo demonstrate the power of the network analysis, let’s turn to a fictional human continent: the Seven Kingdoms of Westeros. George R. R. Martin’s “A Song of Ice and Fire” series stands among the most richly imagined fantasy sagas of our time. The books are populated by hundreds of characters enmeshed in a complex web of alliances, loyalties, histories and conflicts.",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T13:32:12+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h1>Neo4j</h1>\n<p><a href=\"https://neo4j.com/\">Neo4j</a> is a native graph database, built from the ground up to leverage not only data but also data relationships. Unlike traditional databases, which arrange data in rows, columns and tables, Neo4j has a flexible structure defined by stored relationships between data records. With Neo4j, each data record, or node, stores direct pointers to all the nodes it’s connected to. You can download it or spin up a sandbox instance <a href=\"https://neo4j.com/try-neo4j/\">here</a>.</p>\n<p>There are 2 things you need to do before using Neo4j in Zeppelin.</p>\n<ul>\n  <li><a href=\"https://neo4j.com/try-neo4j/\">Download and install Neo4j</a></li>\n  <li>Specify the url, username and password for neo4j interpreter to connect to your Neo4j instance</li>\n</ul>\n<h2>Network of thrones</h2>\n<p>To demonstrate the power of the network analysis, let’s turn to a fictional human continent: the Seven Kingdoms of Westeros. George R. R. Martin’s “A Song of Ice and Fire” series stands among the most richly imagined fantasy sagas of our time. The books are populated by hundreds of characters enmeshed in a complex web of alliances, loyalties, histories and conflicts.</p>\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602672208307_-1286312731",
+      "id": "paragraph_1602672208307_-1286312731",
+      "dateCreated": "2020-10-14T10:43:28+0000",
+      "dateStarted": "2020-10-15T13:32:11+0000",
+      "dateFinished": "2020-10-15T13:32:11+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:72468"
+    },
+    {
+      "title": "Create Constraint",
+      "text": "%neo4j\nCREATE CONSTRAINT ON (p:Person) ASSERT p.id IS UNIQUE;\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:50+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602672225436_1786403261",
+      "id": "paragraph_1602672225436_1786403261",
+      "dateCreated": "2020-10-14T10:43:45+0000",
+      "dateStarted": "2020-10-15T12:43:50+0000",
+      "dateFinished": "2020-10-15T12:43:50+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72469"
+    },
+    {
+      "title": "Import GoT Network",
+      "text": "%neo4j\nLOAD CSV WITH HEADERS FROM \n'https://raw.githubusercontent.com/mathbeveridge/asoiaf/master/data/asoiaf-all-edges.csv' as value\nMERGE (source:Person{id:value.Source})\nMERGE (target:Person{id:value.Target})\nWITH source,target, toFloat(value.weight) as weight\nMERGE (source)-[i:INTERACTS]-(target)\nSET i.weight = weight",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:51+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "'done'": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602676656036_1731813677",
+      "id": "paragraph_1602676656036_1731813677",
+      "dateCreated": "2020-10-14T11:57:36+0000",
+      "dateStarted": "2020-10-15T12:43:51+0000",
+      "dateFinished": "2020-10-15T12:43:51+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72470"
+    },
+    {
+      "title": "Check if the data was correctly imported by counting the number of nodes in the database",
+      "text": "%neo4j\nMATCH (node) RETURN count(*) as count_of_nodes\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:51+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "count_of_nodes": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "count_of_nodes\n796\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602676689550_1326638623",
+      "id": "paragraph_1602676689550_1326638623",
+      "dateCreated": "2020-10-14T11:58:09+0000",
+      "dateStarted": "2020-10-15T12:43:51+0000",
+      "dateFinished": "2020-10-15T12:43:51+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72471"
+    },
+    {
+      "title": "Retrieve the number of relationships per character",
+      "text": "%neo4j\nMATCH (a:Person)\nRETURN a.id as name, size((a)--()) as degree\nORDER BY degree DESC LIMIT 10",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:51+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "name": "string",
+                      "degree": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "name",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": []
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "name\tdegree\n\"Tyrion-Lannister\"\t122\n\"Jon-Snow\"\t114\n\"Jaime-Lannister\"\t101\n\"Cersei-Lannister\"\t97\n\"Stannis-Baratheon\"\t89\n\"Arya-Stark\"\t84\n\"Catelyn-Stark\"\t75\n\"Sansa-Stark\"\t75\n\"Eddard-Stark\"\t74\n\"Robb-Stark\"\t74\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602677067273_1224384266",
+      "id": "paragraph_1602677067273_1224384266",
+      "dateCreated": "2020-10-14T12:04:27+0000",
+      "dateStarted": "2020-10-15T12:43:51+0000",
+      "dateFinished": "2020-10-15T12:43:51+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72472"
+    },
+    {
+      "title": "Retrieve the weighted degree per character",
+      "text": "%neo4j\nMATCH (a:Person)-[i:INTERACTS]-()\nRETURN a.id as name, sum(i.weight) as weighted_degree\nORDER BY weighted_degree DESC LIMIT 10",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:44:44+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "name": "string",
+                      "weighted_degree": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "name",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "weighted_degree",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "name\tweighted_degree\n\"Tyrion-Lannister\"\t2873.0\n\"Jon-Snow\"\t2757.0\n\"Cersei-Lannister\"\t2232.0\n\"Joffrey-Baratheon\"\t1762.0\n\"Eddard-Stark\"\t1649.0\n\"Daenerys-Targaryen\"\t1608.0\n\"Jaime-Lannister\"\t1569.0\n\"Sansa-Stark\"\t1547.0\n\"Bran-Stark\"\t1508.0\n\"Robert-Baratheon\"\t1488.0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602683811688_42674651",
+      "id": "paragraph_1602683811688_42674651",
+      "dateCreated": "2020-10-14T13:56:51+0000",
+      "dateStarted": "2020-10-15T12:44:41+0000",
+      "dateFinished": "2020-10-15T12:44:41+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72473"
+    },
+    {
+      "text": "%md\nApache Zeppelin can visualize the results as a network. This works really nicely with Neo4j as the underlying data structure is also a network or graph. Here are some example queries that return the results in the form of a graph that can be visualized with Apache Zeppelin. \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:51+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/text",
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<p>Apache Zeppelin can visualize the results as a network. This works really nicely with Neo4j as the underlying data structure is also a network or graph. Here are some example queries that return the results in the form of a graph that can be visualized with Apache Zeppelin.</p>\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602765075025_1894623513",
+      "id": "paragraph_1602765075025_1894623513",
+      "dateCreated": "2020-10-15T12:31:15+0000",
+      "dateStarted": "2020-10-15T12:43:51+0000",
+      "dateFinished": "2020-10-15T12:43:51+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72474"
+    },
+    {
+      "title": "Get neighbors of Jon Snow",
+      "text": "%neo4j\nMATCH (a:Person)-[r:INTERACTS]-(b:Person)\nWHERE a.id = 'Jon-Snow'\nRETURN a,r,b LIMIT 15",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:56+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "network",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "label": "string",
+                      "weight": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "network": {
+                  "properties": {
+                    "Person": {
+                      "selected": "id",
+                      "keys": [
+                        "id",
+                        "label"
+                      ]
+                    }
+                  },
+                  "d3Graph": {
+                    "forceLayout": {
+                      "timeout": 10000,
+                      "charge": -120,
+                      "linkDistance": "150"
+                    },
+                    "zoom": {
+                      "minScale": "0.5"
+                    }
+                  }
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "NETWORK",
+            "data": "{\"nodes\":[{\"id\":545,\"data\":{\"louvain\":325,\"id\":\"Stonesnake\"},\"label\":\"Person\"},{\"id\":386,\"data\":{\"louvain\":543,\"id\":\"Malegorn\"},\"label\":\"Person\"},{\"id\":451,\"data\":{\"louvain\":325,\"id\":\"Othell-Yarwyck\"},\"label\":\"Person\"},{\"id\":452,\"data\":{\"louvain\":325,\"id\":\"Ottyn-Wythers\"},\"label\":\"Person\"},{\"id\":325,\"data\":{\"louvain\":325,\"id\":\"Jon-Snow\"},\"label\":\"Person\"},{\"id\":421,\"data\":{\"louvain\":112,\"id\":\"Mordane\"},\"label\":\"Person\"},{\"id\":453,\"data\":{\"louvain\":325,\"id\":\"Owen\"},\"label\":\"Person\"},{\"id\":458,\"data\":{\"louvain\":543,\"id\":\"Patrek-of-Kings-Mountain\"},\"label\":\"Person\"},{\"id\":524,\"data\":{\"louvain\":112,\"id\":\"Sansa-Stark\"},\"label\":\"Person\"},{\"id\":559,\"data\":{\"louvain\":559,\"id\":\"Theon-Greyjoy\"},\"label\":\"Person\"},{\"id\":340,\"data\":{\"louvain\":325,\"id\":\"Kegs\"},\"label\":\"Person\"},{\"id\":565,\"data\":{\"louvain\":325,\"id\":\"Tormund\"},\"label\":\"Person\"},{\"id\":374,\"data\":{\"louvain\":559,\"id\":\"Luwin\"},\"label\":\"Person\"},{\"id\":503,\"data\":{\"louvain\":559,\"id\":\"Rickon-Stark\"},\"label\":\"Person\"},{\"id\":506,\"data\":{\"louvain\":462,\"id\":\"Robert-Baratheon\"},\"label\":\"Person\"},{\"id\":766,\"data\":{\"louvain\":325,\"id\":\"Soren-Shieldbreaker\"},\"label\":\"Person\"}],\"edges\":[{\"source\":325,\"target\":503,\"id\":7171,\"data\":{\"weight\":16.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":506,\"id\":7173,\"data\":{\"weight\":29.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":524,\"id\":7178,\"data\":{\"weight\":11.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":340,\"id\":7148,\"data\":{\"weight\":5.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":374,\"id\":7151,\"data\":{\"weight\":10.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":766,\"id\":7183,\"data\":{\"weight\":3.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":386,\"id\":7153,\"data\":{\"weight\":5.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":545,\"id\":7186,\"data\":{\"weight\":13.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":559,\"id\":7188,\"data\":{\"weight\":16.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":421,\"id\":7157,\"data\":{\"weight\":4.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":565,\"id\":7193,\"data\":{\"weight\":73.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":451,\"id\":7162,\"data\":{\"weight\":10.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":452,\"id\":7164,\"data\":{\"weight\":3.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":453,\"id\":7165,\"data\":{\"weight\":17.0},\"label\":\"INTERACTS\"},{\"source\":325,\"target\":458,\"id\":7166,\"data\":{\"weight\":7.0},\"label\":\"INTERACTS\"}],\"labels\":{\"Person\":\"#0F1086\"},\"types\":[\"INTERACTS\"],\"directed\":true}"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602676730743_180398174",
+      "id": "paragraph_1602676730743_180398174",
+      "dateCreated": "2020-10-14T11:58:50+0000",
+      "dateStarted": "2020-10-15T12:43:56+0000",
+      "dateFinished": "2020-10-15T12:43:56+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72475"
+    },
+    {
+      "title": "Find the shortest path between Jon Snow and Arianne Martell",
+      "text": "%neo4j\nMATCH (source:Person{id:\"Jon-Snow\"}), (target:Person{id:\"Arianne-Martell\"})\nMATCH p=shortestPath((source)-[*..10]-(target))\nRETURN p",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:51+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "network",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "label": "string",
+                      "weight": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "network": {
+                  "properties": {
+                    "Person": {
+                      "selected": "id",
+                      "keys": [
+                        "id",
+                        "label"
+                      ]
+                    }
+                  },
+                  "d3Graph": {
+                    "forceLayout": {
+                      "timeout": 10000,
+                      "charge": -120,
+                      "linkDistance": "150"
+                    },
+                    "zoom": {
+                      "minScale": "0.5"
+                    }
+                  }
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "NETWORK",
+            "data": "{\"nodes\":[{\"id\":325,\"data\":{\"louvain\":325,\"id\":\"Jon-Snow\"},\"label\":\"Person\"},{\"id\":421,\"data\":{\"louvain\":112,\"id\":\"Mordane\"},\"label\":\"Person\"},{\"id\":38,\"data\":{\"louvain\":168,\"id\":\"Arianne-Martell\"},\"label\":\"Person\"},{\"id\":431,\"data\":{\"louvain\":168,\"id\":\"Myrcella-Baratheon\"},\"label\":\"Person\"}],\"edges\":[{\"source\":325,\"target\":421,\"id\":7157,\"data\":{\"weight\":4.0},\"label\":\"INTERACTS\"},{\"source\":38,\"target\":431,\"id\":5387,\"data\":{\"weight\":16.0},\"label\":\"INTERACTS\"},{\"source\":421,\"target\":431,\"id\":7516,\"data\":{\"weight\":12.0},\"label\":\"INTERACTS\"}],\"labels\":{\"Person\":\"#0F1086\"},\"types\":[\"INTERACTS\"],\"directed\":true}"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602677434044_-340013575",
+      "id": "paragraph_1602677434044_-340013575",
+      "dateCreated": "2020-10-14T12:10:34+0000",
+      "dateStarted": "2020-10-15T12:43:51+0000",
+      "dateFinished": "2020-10-15T12:43:51+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72476"
+    },
+    {
+      "text": "%neo4j\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15T12:43:52+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/undefined"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602680962103_608902778",
+      "id": "paragraph_1602680962103_608902778",
+      "dateCreated": "2020-10-14T13:09:22+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:72477"
+    }
+  ],
+  "name": "Neo4j Basics",
+  "id": "2FMAVE82G",
+  "defaultInterpreterGroup": "neo4j",
+  "version": "0.9.0-preview1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {
+    "isRunning": false
+  },
+  "path": "/Neo4j Basics"
+}
